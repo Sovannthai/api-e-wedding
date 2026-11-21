@@ -1,14 +1,24 @@
-# Caddy gets and renews the HTTPS certificates by itself. Both domains must
-# already point at this server (DNS A records) and ports 80 + 443 must be open.
-
-# The invitation website
+# One domain for everything. Caddy gets and renews the HTTPS certificate by
+# itself; the domain must already point at this server (DNS A record) and
+# ports 80 + 443 must be open.
+#
+#   https://<domain>/          the invitation website
+#   https://<domain>/admin     Directus (admin app and API)
+#
+# Directus is told it lives under /admin (PUBLIC_URL in docker-compose.yml)
+# and Caddy strips that prefix before passing requests on. Its admin app is
+# therefore at /admin/admin/ — /admin itself redirects there.
 {$SITE_DOMAIN} {
 	encode zstd gzip
-	reverse_proxy web:3000
-}
 
-# Directus admin app and API
-{$API_DOMAIN} {
-	encode zstd gzip
-	reverse_proxy directus:8055
+	@adminRoot path /admin /admin/
+	redir @adminRoot /admin/admin/
+
+	handle_path /admin/* {
+		reverse_proxy directus:8055
+	}
+
+	handle {
+		reverse_proxy web:3000
+	}
 }

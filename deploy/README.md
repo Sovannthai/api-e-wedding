@@ -8,13 +8,18 @@ registry (GHCR), built by GitHub Actions on every push to `develop`:
 | `ghcr.io/sovannthai/e-invitation-wedding:develop` | the website repo |
 | `ghcr.io/sovannthai/api-e-wedding:develop` | this repo (Directus + schema snapshot + scripts) |
 
-Caddy sits in front and handles HTTPS for both domains by itself.
+Caddy sits in front on one domain and handles HTTPS by itself:
+
+| Address | Goes to |
+|---|---|
+| `https://<domain>/` | the invitation website |
+| `https://<domain>/admin` | Directus admin (redirects to `/admin/admin/`, where the app lives) |
+| `https://<domain>/admin/...` | the Directus API, e.g. `/admin/items/guests` |
 
 ## Before you start
 
 - Docker with the compose plugin on the server.
-- Two DNS A records pointing at the server, e.g. `wedding.example.com` (the
-  site) and `api.wedding.example.com` (Directus admin).
+- One DNS A record pointing at the server, e.g. `wedding.example.com`.
 - Ports 80 and 443 open.
 - The images are built for x86-64 (`linux/amd64`). On an ARM server, add
   `platforms: linux/arm64` to the build step in both `.github/workflows/docker.yml`.
@@ -44,7 +49,7 @@ Caddy sits in front and handles HTTPS for both domains by itself.
    cd ~/e-wedding && cp .env.example .env && nano .env
    ```
 
-   Set the two domains, new passwords and a new `DIRECTUS_SECRET`. Leave
+   Set the domain, new passwords and a new `DIRECTUS_SECRET`. Leave
    `NUXT_DIRECTUS_TOKEN` empty for now.
 
 4. **Start the API and create the schema:**
@@ -63,8 +68,8 @@ Caddy sits in front and handles HTTPS for both domains by itself.
    ```
 
    The site is at `https://<SITE_DOMAIN>` and the admin app at
-   `https://<API_DOMAIN>/admin`. The first request takes a few seconds while
-   Caddy gets the certificates.
+   `https://<SITE_DOMAIN>/admin`. The first request takes a few seconds while
+   Caddy gets the certificate.
 
 ## Updating
 

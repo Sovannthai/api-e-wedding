@@ -1,9 +1,9 @@
 # Production stack for the wedding site. Copy this folder to the server,
 # fill in .env (see .env.example) and follow README.md.
 #
-#   Caddy (80/443, HTTPS) ─┬─ SITE_DOMAIN → web (Nuxt)  ──┐
-#                          └─ API_DOMAIN  → directus  ←───┘ (server-side lookups)
-#                                              └─ postgres
+#   Caddy (80/443, HTTPS) ─┬─ https://SITE_DOMAIN/       → web (Nuxt) ──┐
+#                          └─ https://SITE_DOMAIN/admin  → directus  ←──┘ (server-side lookups)
+#                                                            └─ postgres
 #
 # Only Caddy is reachable from outside; nothing else publishes a port.
 name: e-wedding
@@ -32,7 +32,8 @@ services:
         condition: service_healthy
     environment:
       SECRET: ${DIRECTUS_SECRET}
-      PUBLIC_URL: https://${API_DOMAIN}
+      # Served under /admin on the site's domain; Caddy strips the prefix
+      PUBLIC_URL: https://${SITE_DOMAIN}/admin
 
       DB_CLIENT: pg
       DB_HOST: postgres
@@ -83,7 +84,6 @@ services:
       - "${HTTPS_PORT:-443}:443/udp"
     environment:
       SITE_DOMAIN: ${SITE_DOMAIN}
-      API_DOMAIN: ${API_DOMAIN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       # Certificates live here — keep the volume or Caddy re-issues them
