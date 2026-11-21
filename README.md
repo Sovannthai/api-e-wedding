@@ -56,3 +56,10 @@ node --env-file=.env scripts/import-guests.mjs "<file.csv>" "University PNC"
 
 Guests already in that group (same name) are skipped, so a re-export can be re-imported.
 # api-e-wedding
+
+## Deploy
+
+Pushing to `develop` builds `ghcr.io/sovannthai/api-e-wedding:develop`
+(`.github/workflows/docker.yml`). The production stack — Postgres, Directus,
+the website and Caddy for HTTPS — and the steps to run it on a server are in
+[`deploy/`](deploy/README.md).

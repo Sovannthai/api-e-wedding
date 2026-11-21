@@ -1,0 +1,4 @@
+# Only snapshots/ and scripts/ go into the image
+*
+!snapshots
+!scripts

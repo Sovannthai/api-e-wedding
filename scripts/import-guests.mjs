@@ -14,7 +14,9 @@ if (!file || !group) {
   process.exit(1);
 }
 
-const URL = process.env.PUBLIC_URL ?? "http://localhost:8055";
+// DIRECTUS_URL wins when set: inside the production container the API is
+// reached on 127.0.0.1, not through its public address.
+const URL = process.env.DIRECTUS_URL ?? process.env.PUBLIC_URL ?? "http://localhost:8055";
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 
 let token;

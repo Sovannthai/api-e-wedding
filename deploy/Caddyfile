@@ -1,0 +1,14 @@
+# Caddy gets and renews the HTTPS certificates by itself. Both domains must
+# already point at this server (DNS A records) and ports 80 + 443 must be open.
+
+# The invitation website
+{$SITE_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy web:3000
+}
+
+# Directus admin app and API
+{$API_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy directus:8055
+}
