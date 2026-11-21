@@ -13,13 +13,15 @@ Caddy sits in front on one domain and handles HTTPS by itself:
 | Address | Goes to |
 |---|---|
 | `https://<domain>/` | the invitation website |
-| `https://<domain>/admin` | Directus admin (redirects to `/admin/admin/`, where the app lives) |
-| `https://<domain>/admin/...` | the Directus API, e.g. `/admin/items/guests` |
+| `https://<domain>/admin-portal` | Directus admin (redirects to `/admin-portal/admin/`, where the app lives) |
+| `https://<domain>/admin-portal/...` | the Directus API, e.g. `/admin-portal/items/guests` |
+| `https://www.<domain>/...` | redirects to the same address without `www` |
 
 ## Before you start
 
 - Docker with the compose plugin on the server.
-- One DNS A record pointing at the server, e.g. `wedding.example.com`.
+- DNS pointing at the server: an A record for the domain, e.g.
+  `wedding.example.com`, and a CNAME (or A record) for `www`.
 - Ports 80 and 443 open.
 - The images are built for x86-64 (`linux/amd64`). On an ARM server, add
   `platforms: linux/arm64` to the build step in both `.github/workflows/docker.yml`.
@@ -68,7 +70,7 @@ Caddy sits in front on one domain and handles HTTPS by itself:
    ```
 
    The site is at `https://<SITE_DOMAIN>` and the admin app at
-   `https://<SITE_DOMAIN>/admin`. The first request takes a few seconds while
+   `https://<SITE_DOMAIN>/admin-portal`. The first request takes a few seconds while
    Caddy gets the certificate.
 
 ## Updating

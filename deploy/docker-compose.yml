@@ -1,9 +1,9 @@
 # Production stack for the wedding site. Copy this folder to the server,
 # fill in .env (see .env.example) and follow README.md.
 #
-#   Caddy (80/443, HTTPS) ─┬─ https://SITE_DOMAIN/       → web (Nuxt) ──┐
-#                          └─ https://SITE_DOMAIN/admin  → directus  ←──┘ (server-side lookups)
-#                                                            └─ postgres
+#   Caddy (80/443, HTTPS) ─┬─ https://SITE_DOMAIN/              → web (Nuxt) ──┐
+#                          └─ https://SITE_DOMAIN/admin-portal  → directus  ←──┘ (server-side lookups)
+#                                                                   └─ postgres
 #
 # Only Caddy is reachable from outside; nothing else publishes a port.
 name: e-wedding
@@ -32,8 +32,8 @@ services:
         condition: service_healthy
     environment:
       SECRET: ${DIRECTUS_SECRET}
-      # Served under /admin on the site's domain; Caddy strips the prefix
-      PUBLIC_URL: https://${SITE_DOMAIN}/admin
+      # Served under /admin-portal on the site's domain; Caddy strips the prefix
+      PUBLIC_URL: https://${SITE_DOMAIN}/admin-portal
 
       DB_CLIENT: pg
       DB_HOST: postgres
