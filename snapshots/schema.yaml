@@ -241,10 +241,14 @@ fields:
       field: invitation_link
       group: null
       hidden: false
-      interface: presentation-notice
-      note: null
+      interface: presentation-links
+      note: Save the guest first. Right-click the button to copy the link.
       options:
-        text: 'Invitation link: https://<your-site>/{{id}}'
+        links:
+          - icon: open_in_new
+            label: Open invitation
+            type: primary
+            url: http://localhost:3000/{{id}}
       readonly: false
       required: false
       searchable: true

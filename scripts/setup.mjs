@@ -13,6 +13,31 @@ const URL = process.env.DIRECTUS_URL ?? process.env.PUBLIC_URL ?? "http://localh
 const { ADMIN_EMAIL, ADMIN_PASSWORD } = process.env;
 const FRONTEND_EMAIL = "frontend@e-wedding.com";
 
+// Where the invitation website lives, for the guests' invitation links.
+// CORS_ORIGIN is already the site's address in both .env files, so it is the
+// fallback; set SITE_URL to override it.
+const SITE_URL = (process.env.SITE_URL ?? process.env.CORS_ORIGIN ?? "http://localhost:3000").replace(/\/+$/, "");
+
+// A button on each guest that opens their personal invitation. Button links
+// fill in {{id}} from the saved guest (a notice only shows its text as
+// written), so the button works once the guest has been saved.
+const INVITATION_LINK_META = {
+  interface: "presentation-links",
+  special: ["alias", "no-data"],
+  width: "half",
+  note: "Save the guest first. Right-click the button to copy the link.",
+  options: {
+    links: [
+      {
+        label: "Open invitation",
+        icon: "open_in_new",
+        type: "primary",
+        url: `${SITE_URL}/{{id}}`,
+      },
+    ],
+  },
+};
+
 let token;
 
 async function api(method, path, body) {
@@ -100,12 +125,7 @@ if (await exists("/collections/guests")) {
       {
         field: "invitation_link",
         type: "alias",
-        meta: {
-          interface: "presentation-notice",
-          special: ["alias", "no-data"],
-          width: "half",
-          options: { text: "Invitation link: https://<your-site>/{{id}}" },
-        },
+        meta: INVITATION_LINK_META,
       },
       {
         field: "note",
@@ -127,6 +147,11 @@ if (await exists("/collections/guests")) {
   });
   console.log("created guests collection");
 }
+
+// Kept up to date on every run: installs made before the link became a
+// button (or with another site address) are corrected here.
+await api("PATCH", "/fields/guests/invitation_link", { meta: INVITATION_LINK_META });
+console.log(`guests.invitation_link points at ${SITE_URL}/<guest id>`);
 
 // Added after the first release: which guest list a guest came from — the
 // sheet name in the invitation spreadsheet, e.g. "University PNC".

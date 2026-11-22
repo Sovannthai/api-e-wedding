@@ -28,6 +28,10 @@ It prints `NUXT_DIRECTUS_TOKEN=...` once — put it in `../e-invitation-wedding/
 
 Add guests in the admin app (Content → Guests). Each guest's invitation link is
 `https://<site>/<guest id>`, and the envelope is addressed to their `name`.
+Once a guest is saved, the **Open invitation** button on their page goes to
+that link (right-click it to copy the address). The site address comes from
+`CORS_ORIGIN` (or `SITE_URL`) when `scripts/setup.mjs` runs; re-run the script
+if the address changes.
 
 The website reads guests through its own server route (`server/api/guests/[id].get.ts`)
 using the "Frontend" user's token, which can only read guests and read/add wishes.
