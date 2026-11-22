@@ -28,8 +28,10 @@ It prints `NUXT_DIRECTUS_TOKEN=...` once — put it in `../e-invitation-wedding/
 
 Add guests in the admin app (Content → Guests). Each guest's invitation link is
 `https://<site>/<guest id>`, and the envelope is addressed to their `name`.
-Once a guest is saved, the **Open invitation** button on their page goes to
-that link (right-click it to copy the address). The site address comes from
+Once a guest is saved, their page has two buttons: **Open invitation** goes
+to that link, and **Copy invitation text** opens a page with the invitation
+message in Khmer and English — their name and link filled in — and a Copy
+button for each. The site address comes from
 `CORS_ORIGIN` (or `SITE_URL`) when `scripts/setup.mjs` runs; re-run the script
 if the address changes.
 

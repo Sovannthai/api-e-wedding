@@ -242,13 +242,17 @@ fields:
       group: null
       hidden: false
       interface: presentation-links
-      note: Save the guest first. Right-click the button to copy the link.
+      note: Save the guest first.
       options:
         links:
           - icon: open_in_new
             label: Open invitation
             type: primary
             url: http://localhost:3000/{{id}}
+          - icon: content_copy
+            label: Copy invitation text
+            type: normal
+            url: http://localhost:3000/share/{{id}}
       readonly: false
       required: false
       searchable: true

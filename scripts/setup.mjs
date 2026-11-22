@@ -18,14 +18,16 @@ const FRONTEND_EMAIL = "frontend@e-wedding.com";
 // fallback; set SITE_URL to override it.
 const SITE_URL = (process.env.SITE_URL ?? process.env.CORS_ORIGIN ?? "http://localhost:3000").replace(/\/+$/, "");
 
-// A button on each guest that opens their personal invitation. Button links
-// fill in {{id}} from the saved guest (a notice only shows its text as
-// written), so the button works once the guest has been saved.
+// Two buttons on each guest: one opens their personal invitation, the other
+// opens the website's /share/<id> page, which has the invitation message in
+// Khmer and English with their name and link filled in, ready to copy.
+// Button links fill in {{id}} from the saved guest (a notice only shows its
+// text as written), so the buttons work once the guest has been saved.
 const INVITATION_LINK_META = {
   interface: "presentation-links",
   special: ["alias", "no-data"],
   width: "half",
-  note: "Save the guest first. Right-click the button to copy the link.",
+  note: "Save the guest first.",
   options: {
     links: [
       {
@@ -33,6 +35,12 @@ const INVITATION_LINK_META = {
         icon: "open_in_new",
         type: "primary",
         url: `${SITE_URL}/{{id}}`,
+      },
+      {
+        label: "Copy invitation text",
+        icon: "content_copy",
+        type: "normal",
+        url: `${SITE_URL}/share/{{id}}`,
       },
     ],
   },
